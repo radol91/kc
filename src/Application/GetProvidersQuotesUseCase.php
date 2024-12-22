@@ -19,7 +19,7 @@ final readonly class GetProvidersQuotesUseCase
     ) {}
 
     /** @param string[] $topics */
-    public function getTotalByTopics(array $topics): float
+    public function getTotalByTopics(array $topics): int
     {
         return array_sum(array_map(fn($key) => $this->topics[$key] ?? 0, $topics));
     }

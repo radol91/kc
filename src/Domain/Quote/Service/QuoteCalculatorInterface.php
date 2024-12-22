@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace App\Domain\Quote\Service;
 
 use App\Domain\Provider\Provider;
+use App\Domain\Quote\Exception\QuoteCalculatorException;
 use App\Domain\Quote\Quote;
 
 interface QuoteCalculatorInterface
 {
-    /** @param string[] $consideredTopics */
+    /**
+     * @throws QuoteCalculatorException
+     *
+     * @param string[] $consideredTopics
+     */
     public function calculate(
         Provider $provider,
         array $consideredTopics,
-        float $baseQuoteValue
+        int $baseQuoteValue
     ): Quote;
 }

@@ -33,6 +33,10 @@ class JsonProviderStore implements ProviderStoreInterface
             throw new \RuntimeException('JSON file is malformed.');
         }
 
+        if (!isset($data['provider_topics'])) {
+            throw new \RuntimeException('Missing `provider_topics` key in JSON file.');
+        }
+
         $this->store = $data;
     }
 

@@ -18,6 +18,10 @@ class Provider
 
     public function addTopic(string $topic): void
     {
+        if (empty($topic)) {
+            return;
+        }
+
         if (!in_array($topic, $this->topics)) {
             $this->topics[] = $topic;
         }

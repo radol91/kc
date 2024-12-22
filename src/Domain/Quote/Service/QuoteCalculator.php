@@ -35,13 +35,11 @@ class QuoteCalculator implements QuoteCalculatorInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @throws QuoteCalculatorConditionNotHandledException
      */
     public function calculate(
         Provider $provider,
         array $consideredTopics,
-        float $baseQuoteValue
+        int $baseQuoteValue
     ): Quote {
         $matchedTopics = $provider->matchAvailableTopics($consideredTopics);
         if (empty($matchedTopics)) {
@@ -49,7 +47,12 @@ class QuoteCalculator implements QuoteCalculatorInterface
         }
 
         if (1 === count($matchedTopics)) {
-            $priority = array_search(current($matchedTopics), $consideredTopics);
+            $matchedTopic = current($matchedTopics);
+            $priority = array_search($matchedTopic, $consideredTopics);
+
+            if (!isset($this->priorityWeightMap[$priority])) {
+                throw new \RuntimeException('Priority map is not set properly.');
+            }
 
             return new Quote($this->priorityWeightMap[$priority] * $baseQuoteValue);
         }
