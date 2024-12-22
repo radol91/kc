@@ -6,21 +6,27 @@ declare(strict_types=1);
 namespace App\Application;
 
 use App\Domain\Provider\ProviderStoreInterface;
+use App\Domain\Quote\Exception\QuoteCalculatorException;
 use App\Domain\Quote\Service\QuoteCalculatorInterface;
 
 class ProvidersQuotesService
 {
-    public const int DEFAULT_CONSIDERED_TOPIC_COUNT = 3;
+    public const int DEFAULT_CONSIDERED_TOPICS_COUNT = 3;
     private int $consideredTopicsCount;
+
     public function __construct(
         private readonly ProviderStoreInterface $providerStore,
         private readonly QuoteCalculatorInterface $quoteCalculator,
-        int $consideredTopicsCount = self::DEFAULT_CONSIDERED_TOPIC_COUNT,
+        int $consideredTopicsCount = self::DEFAULT_CONSIDERED_TOPICS_COUNT,
     ) {
         $this->consideredTopicsCount = $consideredTopicsCount;
     }
 
-    /** @return ProviderQuoteDto[] */
+    /**
+     * @throws QuoteCalculatorException
+     *
+     * @return ProviderQuoteDto[]
+     */
     public function getProvidersQuotes(GetProvidersQuotesUseCase $getProvidersQuotesUseCase): array
     {
         $quotes = [];
