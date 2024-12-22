@@ -1,0 +1,15 @@
+### POST request for quotes
+POST {{baseUrl}}/quotes
+Accept: application/json
+Content-Type: application/json
+
+{
+    "topics": {
+        "reading": 20,
+        "math": 50,
+        "science": 30,
+        "history": 15,
+        "art": 10
+    }
+}
+###

@@ -12,6 +12,8 @@ services:
       #  from the bind-mount for better performance by enabling the next line:
       #- /app/vendor
     environment:
+      SERVER_NAME: http://localhost
+      MERCURE_PUBLIC_URL: http://localhost/.well-known/mercure
       MERCURE_EXTRA_DIRECTIVES: demo
       # See https://xdebug.org/docs/all_settings#mode
       XDEBUG_MODE: "${XDEBUG_MODE:-off}"
