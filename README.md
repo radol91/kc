@@ -1,10 +1,3 @@
-# Symfony Docker
-
-A [Docker](https://www.docker.com/)-based installer and runtime for the [Symfony](https://symfony.com) web framework,
-with [FrankenPHP](https://frankenphp.dev) and [Caddy](https://caddyserver.com/) inside!
-
-![CI](https://github.com/dunglas/symfony-docker/workflows/CI/badge.svg)
-
 ## Getting Started
 
 1. If not already done, [install Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
@@ -13,39 +6,51 @@ with [FrankenPHP](https://frankenphp.dev) and [Caddy](https://caddyserver.com/) 
 4. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
 5. Run `docker compose down --remove-orphans` to stop the Docker containers.
 
-## Features
+## Authentication
+I skipped the authentication part in the endpoint I provided. I would use JWT from `lexik/jwt-authentication-bundle`, but I ran out of time.
 
-* Production, development and CI ready
-* Just 1 service by default
-* Blazing-fast performance thanks to [the worker mode of FrankenPHP](https://github.com/dunglas/frankenphp/blob/main/docs/worker.md) (automatically enabled in prod mode)
-* [Installation of extra Docker Compose services](docs/extra-services.md) with Symfony Flex
-* Automatic HTTPS (in dev and prod)
-* HTTP/3 and [Early Hints](https://symfony.com/blog/new-in-symfony-6-3-early-hints) support
-* Real-time messaging thanks to a built-in [Mercure hub](https://symfony.com/doc/current/mercure.html)
-* [Vulcain](https://vulcain.rocks) support
-* Native [XDebug](docs/xdebug.md) integration
-* Super-readable configuration
+## Running tests
+1. Start container
+2. Run `docker compose exec php vendor/bin/phpunit`
 
-**Enjoy!**
 
-## Docs
+## Running example from assignment
+1. Start container
+2. Navigate to `{PROJECT_DIR}/docs/api/quotes.http` and run the request
 
-1. [Options available](docs/options.md)
-2. [Using Symfony Docker with an existing project](docs/existing-project.md)
-3. [Support for extra services](docs/extra-services.md)
-4. [Deploying in production](docs/production.md)
-5. [Debugging with Xdebug](docs/xdebug.md)
-6. [TLS Certificates](docs/tls.md)
-7. [Using MySQL instead of PostgreSQL](docs/mysql.md)
-8. [Using Alpine Linux instead of Debian](docs/alpine.md)
-9. [Using a Makefile](docs/makefile.md)
-10. [Updating the template](docs/updating.md)
-11. [Troubleshooting](docs/troubleshooting.md)
 
-## License
+## Missing business logic in the assignment
+I couldn't find an answer in the assignment about what should happen when more than two topics are matched by a provider. 
+I know that in the sample JSON, each provider has only two topics, but I assumed the JSON file could change. 
+Therefore, for cases where more than two topics are matched, I throw a NotImplemented exception (501).
 
-Symfony Docker is available under the MIT License.
+## Mistake in quotes in the assignment
+For sample JSON file:
+```json
+{
+  "provider_topics": {
+    "provider_a": "math+science",
+    "provider_b": "reading+science",
+    "provider_c": "history+math"
+  }
+}
+```
 
-## Credits
+and POST payload: 
+```json
+{
+    "topics": {
+        "reading": 20,
+        "math": 50,
+        "science": 30,
+        "history": 15,
+        "art": 10
+    }
+}
+```
 
-Created by [Kévin Dunglas](https://dunglas.dev), co-maintained by [Maxime Helias](https://twitter.com/maxhelias) and sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
+Provider C matched the `math` topic, which is "the highest requested topic", so the quote ratio for it is 0.2. 
+In example for Provider C the expected value is 12.5, but it should probably be: 50 * 0.2 = 10. 
+
+Provider B matched the `math` and `reading:` topics, which makes the application use the quote ratio for "2 topics match" so it is 0.1.
+In example for Provider B the expected value is 5, and it is correct but it results from calculation: (20 + 30) * 0.1 = 5. 
