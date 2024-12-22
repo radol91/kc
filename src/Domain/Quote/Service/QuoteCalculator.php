@@ -18,17 +18,13 @@ class QuoteCalculator implements QuoteCalculatorInterface
         2 => 0.3,
     ];
 
-    private float $multipleTopicsWeight;
     private array $priorityWeightMap;
-
 
     /** @param array<int, float> $priorityWeightMap */
     public function __construct(
-        float $multipleTopicsWeight = self::DEFAULT_MULTIPLE_TOPICS_WEIGHT,
+        private readonly float $multipleTopicsWeight = self::DEFAULT_MULTIPLE_TOPICS_WEIGHT,
         array $priorityWeightMap = self::DEFAULT_PRIORITY_WEIGHT_MAP,
     ) {
-        $this->multipleTopicsWeight = $multipleTopicsWeight;
-
         // Normalize weights map to start from 0
         $this->priorityWeightMap = array_values($priorityWeightMap);
     }

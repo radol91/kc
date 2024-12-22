@@ -12,14 +12,12 @@ use App\Domain\Quote\Service\QuoteCalculatorInterface;
 class ProvidersQuotesService
 {
     public const int DEFAULT_CONSIDERED_TOPICS_COUNT = 3;
-    private int $consideredTopicsCount;
 
     public function __construct(
         private readonly ProviderStoreInterface $providerStore,
         private readonly QuoteCalculatorInterface $quoteCalculator,
-        int $consideredTopicsCount = self::DEFAULT_CONSIDERED_TOPICS_COUNT,
+        private readonly int $consideredTopicsCount = self::DEFAULT_CONSIDERED_TOPICS_COUNT,
     ) {
-        $this->consideredTopicsCount = $consideredTopicsCount;
     }
 
     /**

@@ -11,7 +11,7 @@ I skipped the authentication part in the endpoint I provided. I would use JWT fr
 
 ## Running tests
 1. Start container
-2. Run `docker compose exec php vendor/bin/phpunit`
+2. Run `docker compose exec -T php bin/phpunit`
 
 
 ## Running example from assignment

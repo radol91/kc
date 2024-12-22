@@ -136,4 +136,27 @@ class QuoteCalculatorTest extends TestCase
 
         $quoteCalculator->calculate($provider, ['foo', 'bar', 'matched1'], 100);
     }
+
+    public function testItNormalizesCustomWeightMap(): void
+    {
+        $quoteCalculator = new QuoteCalculator(
+            priorityWeightMap: [
+                1 => 0.1,
+                8 => 0.15,
+                9 => 0.2,
+            ]
+        );
+
+        $provider = $this->createMock(Provider::class);
+        $provider->method('matchAvailableTopics')->willReturn(['matched1']);
+
+        $quotePriorityFirst = $quoteCalculator->calculate($provider, ['matched1', 'foo', 'bar'], 100);
+        self::assertEquals(10, $quotePriorityFirst->value);
+
+        $quotePrioritySecond = $quoteCalculator->calculate($provider, ['foo', 'matched1', 'bar'], 100);
+        self::assertEquals(15, $quotePrioritySecond->value);
+
+        $quotePriorityThird = $quoteCalculator->calculate($provider, ['foo', 'bar', 'matched1'], 100);
+        self::assertEquals(20, $quotePriorityThird->value);
+    }
 }
